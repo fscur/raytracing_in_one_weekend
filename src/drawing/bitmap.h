@@ -25,5 +25,5 @@ private:
 public:
     uint width;
     uint height;
-    unsigned char* data;
+    byte* data;
 };
