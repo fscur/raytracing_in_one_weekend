@@ -42,7 +42,7 @@ scene* pathTracer::createRandomScene()
 
             if ((center - vec3(4, 0.2, 0)).length() > 0.5)
             {
-                if (choose_mat < 0.8)
+                if (choose_mat < 0.7)
                 {  // diffuse
                     auto color = vec3(
                         random::next() * random::next(),
@@ -69,9 +69,9 @@ scene* pathTracer::createRandomScene()
         }
     }
 
+    world->addShape(new sphere(vec3(-4, 1, 0), 1.0, new metal(vec3(0.5, 0.4, 0.7), 0.0)));
     world->addShape(new sphere(vec3(0, 1, 0), 1.0, new dielectric(1.5)));
-    world->addShape(new sphere(vec3(-4, 1, 0), 1.0, new lambertian(vec3(0.4, 0.2, 0.1))));
-    world->addShape(new sphere(vec3(4, 1, 0), 1.0, new metal(vec3(1.0, 0.2, 0.2), 0.0)));
+    world->addShape(new sphere(vec3(4, 1, 0), 1.0, new lambertian(vec3(0.4, 0.2, 0.1))));
 
     return world;
 }
@@ -98,7 +98,7 @@ vec3 pathTracer::li(const ray & r, int depth)
         ray scattered;
         vec3 attenuation;
 
-        if (depth < 50 && hit.material->scatter(r, hit, attenuation, scattered))
+        if (depth < 3 && hit.material->scatter(r, hit, attenuation, scattered))
             return attenuation * li(scattered, depth + 1);
         else
             return vec3(0.0f);
@@ -115,15 +115,17 @@ void pathTracer::run()
 {
     auto writer = new ppmWriter("raytracing.ppm", _width, _height);
 
-    vec3 from(13.0f, 2.0f, 3.0f);
-    vec3 at(0.0f, 0.0f, 0.0f);
-    float focusDistance = 10.0;
-    float aperture = 0.1;
+    vec3 from(12.0f, 2.0f, 6.0f);
+    vec3 at(0.0f, 0.5f, 0.0f);
+    float focusDistance = length(from - at);
+    float aperture = 0.5f;
 
     float fov = 20.0f * (glm::pi<float>() / 180.0f);
     camera cam(fov, float(_width) / float(_height), aperture, focusDistance);
 
     cam.lookAt(from, at, vec3(0.0f, 1.0f, 0.0f));
+
+    auto total = _height;
 
     for (int j = _height - 1; j >= 0; --j)
     {
@@ -136,11 +138,14 @@ void pathTracer::run()
                 float v = float(j + random::next()) / float(_height);
                 const ray r = cam.castRay(vec2(u, v));
                 color += li(r, 0);
-
             }
             color /= float(_ssp);
             writer->write(sqrt(color.x), sqrt(color.y), sqrt(color.z));
         }
+
+        auto current = (float(_height - j) / float(_height)) * 100.0f;
+
+        std::cout << std::to_string(int(current)) << "%" << std::endl;
     }
 
     delete (writer);

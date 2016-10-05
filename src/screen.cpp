@@ -12,7 +12,7 @@ screen::~screen()
 
 void screen::onInit()
 {
-    _pathTracer = new pathTracer(200u, 100u, 100u);
+    _pathTracer = new pathTracer(800u, 450u, 1024u);
     _onKeyUpToken = input::keyUp->assign(std::bind(&screen::onKeyUp, this, std::placeholders::_1));
 }
 
