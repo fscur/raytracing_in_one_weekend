@@ -16,7 +16,7 @@ bitmap::bitmap(uint width, uint height) :
     data = new byte[width * height * 4];
 
     _bmp = CreateDIBSection(_hdc, &_bmi, DIB_RGB_COLORS, (void**)&data, NULL, 0);
-    SelectObject(_hdc, _bmp);
+    _oldBmp = (HBITMAP)SelectObject(_hdc, _bmp);
 }
 
 void bitmap::blit(void* dc)
@@ -25,7 +25,16 @@ void bitmap::blit(void* dc)
     if (!BitBlt((HDC)dc, 0, 0, width, height, (HDC)_hdc, 0, 0, SRCCOPY))
     {
         std::cout << "BitBlt Error: " << HRESULT_FROM_WIN32(GetLastError()) << std::endl;
+        system("pause");
     }
+}
+
+void bitmap::setPixel(uint x, uint y, float r, float g, float b)
+{
+    data[(y * width * 4) + (x * 4) + 0] = byte(255.9999f * b);
+    data[(y * width * 4) + (x * 4) + 1] = byte(255.9999f * g);
+    data[(y * width * 4) + (x * 4) + 2] = byte(255.9999f * r);
+    data[(y * width * 4) + (x * 4) + 3] = 255;
 }
 
 void bitmap::setPixel(uint x, uint y, byte r, byte g, byte b)
@@ -38,7 +47,7 @@ void bitmap::setPixel(uint x, uint y, byte r, byte g, byte b)
 
 bitmap::~bitmap()
 {
-    delete[] data;
+    SelectObject(_hdc, _oldBmp);
     DeleteObject(_bmp);
     DeleteDC(_hdc);
 }

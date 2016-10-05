@@ -9,6 +9,7 @@ class bitmap
 {
 public:
     bitmap(uint width, uint height);
+    void setPixel(uint x, uint y, float r, float g, float b);
     void setPixel(uint x, uint y, byte r, byte g, byte b);
     void blit(void* dc);
     ~bitmap();
@@ -17,6 +18,7 @@ private:
 #ifdef WIN32
     HDC _hdc;
     HBITMAP _bmp;
+    HBITMAP _oldBmp;
     BITMAPINFO _bmi;
 #endif
 

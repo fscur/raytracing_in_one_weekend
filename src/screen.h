@@ -24,8 +24,21 @@ public:
     void onKeyUp(keyboardEventArgs* args);
 
 private:
+    void initInput();
+    void initCamera();
+    void initPathTracer();
+    void initScene();
+
+private:
+    bool _processing;
     eventToken _onKeyUpToken;
-    bitmap* _image;
+    uint _canvasWidth;
+    uint _canvasHeight;
+    uint _canvasSsp;
+
+    camera* _camera;
+    scene* _scene;
     pathTracer* _pathTracer;
+
     std::thread _pathTracerTask;
 };

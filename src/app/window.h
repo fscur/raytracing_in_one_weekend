@@ -1,6 +1,6 @@
 #pragma once
 #include "../common/types.h"
-#include "console.h"
+#include "../io/console.h"
 #include "mouseEventArgs.h"
 #include "keyboardEventArgs.h"
 

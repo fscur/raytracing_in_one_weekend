@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "../math/ray.h"
-#include "../common/intersection.h"
+#include "../math/intersection.h"
 
 class shape
 {

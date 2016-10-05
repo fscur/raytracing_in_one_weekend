@@ -1,5 +1,5 @@
 #pragma once
-#include <glm/glm.hpp>
+#include "../common/types.h"
 
 class material;
 

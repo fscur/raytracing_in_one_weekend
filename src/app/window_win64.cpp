@@ -240,7 +240,7 @@ void window::createWindow(std::string name, uint width, uint height)
     wndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
     wndClass.lpszMenuName = NULL;
 
-    wndClass.lpszClassName = L"T";
+    wndClass.lpszClassName = s2ws(name).c_str();
     wndClass.hIconSm = LoadIcon(NULL, IDI_WINLOGO);
 
     if (!RegisterClassEx(&wndClass))
@@ -259,8 +259,8 @@ void window::createWindow(std::string name, uint width, uint height)
 
     _windowHandle = CreateWindowEx(
         0,
-        L"T",
-        L"T",
+        s2ws(name).c_str(),
+        s2ws(name).c_str(),
         _windowStyle,
         windowRect.left,
         windowRect.top,

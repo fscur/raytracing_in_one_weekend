@@ -1,35 +1,23 @@
 #pragma once
-#include <stdlib.h>
-#include <iostream>
-#include <limits>
-
 #include "../common/types.h"
-#include "../io/ppmWriter.h"
+#include "../drawing/bitmap.h"
+#include "../math/ray.h"
 #include "../scene/scene.h"
 #include "../scene/camera.h"
-#include "../common/sampler.h"
-#include "../common/random.h"
-#include "../shapes/sphere.h"
-#include "../materials/lambertian.h"
-#include "../materials/metal.h"
-#include "../materials/dielectric.h"
-#include "../math/ray.h"
 
 class pathTracer
 {
 public:
-    static scene* createRandomScene();
-
-public:
-    pathTracer(uint width, uint height, uint ssp);
+    pathTracer(scene* scene);
     ~pathTracer();
 
-    vec3 li(const ray& r, int depth);
-    void run();
+    void run(uint width, uint height, uint ssp, bitmap* canvas, void* dc);
 
 private:
-    uint _width;
-    uint _height;
-    uint _ssp;
-    scene _scene;
+    vec3 li(const ray& r, int depth);
+
+private:
+    const float MAX_FLOAT;
+    scene* _scene;
+    camera* _camera;
 };
