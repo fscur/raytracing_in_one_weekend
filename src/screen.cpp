@@ -68,12 +68,14 @@ void screen::onKeyUp(keyboardEventArgs* args)
 {
     if (!_processing && args->key == PHIK_SPACE)
     {
+        _processing = true;
         _pathTracerTask = std::thread([&] 
         {
             bitmap* image = new bitmap(_canvasWidth, _canvasHeight);
             _pathTracer->run(_canvasWidth, _canvasHeight, _canvasSsp, image, getDC());
             delete (image);
         });
+        _processing = false;
     }
 }
 
