@@ -10,7 +10,7 @@ screen::screen(std::wstring name, uint width, uint height) :
     window(name, width, height),
     ASPECT(1.77777778f),
     MIN_SSP(1),
-    MAX_SSP(1024),
+    MAX_SSP(4096),
     MIN_WIDTH(200),
     MAX_WIDTH(800),
     TILE_SIZE(32),
