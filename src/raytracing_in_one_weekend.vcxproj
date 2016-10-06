@@ -25,6 +25,7 @@
     <ClCompile Include="app\input.cpp" />
     <ClCompile Include="app\window.cpp" />
     <ClCompile Include="app\window_win64.cpp" />
+    <ClCompile Include="io\bitmapWriter.cpp" />
     <ClCompile Include="io\ppmWriter.cpp" />
     <ClCompile Include="io\textWriter.cpp" />
     <ClCompile Include="materials\dielectric.cpp" />
@@ -44,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\application.h" />
+    <ClInclude Include="io\bitmapWriter.h" />
     <ClInclude Include="io\console.h" />
     <ClInclude Include="app\eventArgs.h" />
     <ClInclude Include="app\eventHandler.h" />
@@ -57,12 +59,14 @@
     <ClInclude Include="app\mouseEventHandler.h" />
     <ClInclude Include="app\scancode.h" />
     <ClInclude Include="app\window.h" />
+    <ClInclude Include="io\pixelWriter.h" />
     <ClInclude Include="io\ppmWriter.h" />
     <ClInclude Include="io\textWriter.h" />
     <ClInclude Include="materials\dielectric.h" />
     <ClInclude Include="materials\lambertian.h" />
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
+    <ClInclude Include="math\rectangle.h" />
     <ClInclude Include="pathTracing\pathTracer.h" />
     <ClInclude Include="scene\camera.h" />
     <ClInclude Include="math\intersection.h" />

@@ -1,7 +1,7 @@
 #include "window.h"
 
-window::window(std::string name, uint width, uint height) :
-    _name(name),
+window::window(std::wstring title, uint width, uint height) :
+    _title(title),
     _width(width),
     _height(height),
     closed(false) {}

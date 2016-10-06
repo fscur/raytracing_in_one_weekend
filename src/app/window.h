@@ -11,7 +11,7 @@
 class window
 {
 public:
-    window(std::string name, uint width, uint height);
+    window(std::wstring title, uint width, uint height);
     virtual ~window();
 
     void init();
@@ -36,19 +36,20 @@ public:
     bool closed;
 
 protected:
-    std::string _name;
+    std::wstring _title;
     uint _width;
     uint _height;
 
 #ifdef WIN32
 public:
     HDC getDC() const { return _deviceContext; }
+    void setTitle(std::wstring title);
 
 private:
     static LRESULT CALLBACK wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static int convertToKey(WPARAM wParam);
 
-    void createWindow(std::string name, uint width, uint height);
+    void createWindow(std::wstring title, uint width, uint height);
     PIXELFORMATDESCRIPTOR getPixelFormatDescriptor();
     void getDpi();
 

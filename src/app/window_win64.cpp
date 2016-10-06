@@ -141,11 +141,6 @@ int window::convertToKey(WPARAM wParam)
 
 LRESULT CALLBACK window::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    auto p = POINT();
-    p.x = GET_X_LPARAM(lParam);
-    p.y = GET_Y_LPARAM(lParam);
-    ScreenToClient(hWnd, &p);
-
     LRESULT result = 0;
     switch (message)
     {
@@ -191,6 +186,10 @@ LRESULT CALLBACK window::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
         input::notifyKeyUp(convertToKey(wParam));
         break;
     case WM_MOUSEWHEEL:
+        auto p = POINT();
+        p.x = GET_X_LPARAM(lParam);
+        p.y = GET_Y_LPARAM(lParam);
+        ScreenToClient(hWnd, &p);
         input::notifyMouseWheel(GET_WHEEL_DELTA_WPARAM(wParam), p.x, p.y);
         break;
     case WM_MOUSEMOVE:
@@ -224,7 +223,7 @@ LRESULT CALLBACK window::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     return result;
 }
 
-void window::createWindow(std::string name, uint width, uint height)
+void window::createWindow(std::wstring name, uint width, uint height)
 {
     _applicationInstance = GetModuleHandle(NULL);
     WNDCLASSEX wndClass;
@@ -260,7 +259,7 @@ void window::createWindow(std::string name, uint width, uint height)
     _windowHandle = CreateWindowEx(
         0,
         L"window",
-        s2ws(name).c_str(),
+        name.c_str(),
         _windowStyle,
         windowRect.left,
         windowRect.top,
@@ -301,10 +300,15 @@ void window::getDpi()
     ReleaseDC(NULL, screen);
 }
 
+void window::setTitle(std::wstring title)
+{
+    SetWindowText(_windowHandle, title.c_str());
+}
+
 void window::init()
 {
     adjustWindowToScreenBounds();
-    createWindow(_name, _width, _height);
+    createWindow(_title, _width, _height);
 
     ShowWindow(_windowHandle, SW_SHOW);
     SetForegroundWindow(_windowHandle);

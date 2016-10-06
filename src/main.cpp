@@ -11,7 +11,7 @@ int main(int argc, char* args[])
 {
     application app;
 
-    auto mainScreen = new screen("hit space to start [800 x 450 x 256 spp]", 800, 450);
+    auto mainScreen = new screen(L"", 800, 450);
     app.run(mainScreen);
     delete mainScreen;
 

@@ -12,7 +12,7 @@ class screen :
     public window
 {
 public:
-    screen(std::string name, uint witdh, uint height);
+    screen(std::wstring name, uint witdh, uint height);
     ~screen(void);
 
     void onInit() override;
@@ -28,17 +28,30 @@ private:
     void initCamera();
     void initPathTracer();
     void initScene();
+    void launchPathTracer();
+    void doubleSsp();
+    void halveSsp();
+    void doubleResolution();
+    void halveResolution();
+    void updateTitle();
+    void writeInstructionsInConsole();
 
 private:
+    const float ASPECT;
+    const uint MIN_SSP;
+    const uint MAX_SSP;
+    const uint MIN_WIDTH;
+    const uint MAX_WIDTH;
+
     bool _processing;
     eventToken _onKeyUpToken;
-    uint _canvasWidth;
-    uint _canvasHeight;
-    uint _canvasSsp;
+    uint _resultWidth;
+    uint _resultHeight;
+    uint _currentSsp;
 
     camera* _camera;
     scene* _scene;
     pathTracer* _pathTracer;
 
-    std::thread _pathTracerTask;
+    std::thread* _pathTracerTask;
 };
