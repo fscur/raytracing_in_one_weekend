@@ -20,4 +20,4 @@ Known Issues:
 * not rendering the edges of the image
 
 Disclaimer:
-This code is being used as a personal framework for learning purposes. Feel free to used it yourself!
+This code is being used as a personal framework for learning purposes. Feel free to use it yourself!
