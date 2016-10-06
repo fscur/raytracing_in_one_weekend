@@ -21,7 +21,8 @@ public:
 private:
 #ifdef WIN32
     void createBitmap();
-    void createBitmap2(byte* data);
+    void createBitmap(byte* data);
+
 #endif
 
 private:

@@ -40,7 +40,7 @@ void screen::onInit()
 
 void screen::initInput()
 {
-    _onKeyUpToken = input::keyUp->assign(std::bind(&screen::onKeyUp, this, std::placeholders::_1));
+    input::keyUp->assign(std::bind(&screen::onKeyUp, this, std::placeholders::_1));
 }
 
 void screen::initCamera()

@@ -45,7 +45,6 @@ private:
     const uint TILE_SIZE;
 
     bool _processing;
-    eventToken _onKeyUpToken;
     uint _resultWidth;
     uint _resultHeight;
     uint _currentSsp;

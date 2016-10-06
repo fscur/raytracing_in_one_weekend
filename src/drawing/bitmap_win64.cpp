@@ -14,10 +14,10 @@ bitmap::bitmap(uint width, uint height, byte* data) :
     height(height),
     _data(data)
 {
-    createBitmap2(data);
+    createBitmap(data);
 }
 
-void bitmap::createBitmap2(byte* data)
+void bitmap::createBitmap(byte* data)
 {
     _dc = CreateCompatibleDC(NULL);
     BITMAPINFOHEADER bmih;
