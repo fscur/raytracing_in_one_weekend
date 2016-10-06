@@ -1,3 +1,9 @@
+/*
+Port of
+Simple DirectMedia Layer PHI_scancode.h
+From Sam Lantinga <slouken@libsdl.org>
+*/
+
 #pragma once
 #include "scancode.h"
 
