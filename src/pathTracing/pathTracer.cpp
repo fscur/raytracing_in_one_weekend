@@ -29,7 +29,7 @@ vec3 pathTracer::li(const ray& r, int depth)
         ray scattered;
         vec3 attenuation;
 
-        if (depth < 3 && hit.material->scatter(r, hit, attenuation, scattered))
+        if (depth < 5 && hit.material->scatter(r, hit, attenuation, scattered))
             return attenuation * li(scattered, depth + 1);
         else
             return vec3(0.0f);
