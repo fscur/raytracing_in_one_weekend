@@ -66,9 +66,19 @@ double stopwatch::measure(const std::function<void(void)> &function, const std::
 {
     auto msg = functionName + " took: ";
     auto elapsedSeconds = stopwatch::measure(function);
-    std::cout << msg + std::to_string(elapsedSeconds) << std::endl;
+    std::cout << msg + std::to_string(elapsedSeconds) << "s" << std::endl;
 
     return elapsedSeconds;
+}
+
+double stopwatch::measureAverage(const std::function<void(void)> &function, const std::string &functionName, int samples)
+{
+    double average = stopwatch::measureAverage(function, samples);
+
+    auto msg = "average of " + std::to_string(samples) + " samples for " + functionName + " took: ";
+    std::cout << msg << std::to_string(average) << "s" << std::endl;
+
+    return average;
 }
 
 double stopwatch::measureAverage(const std::function<void(void)> &function, int samples)
@@ -78,21 +88,11 @@ double stopwatch::measureAverage(const std::function<void(void)> &function, int 
 
     for (auto i = 0; i < samples; i++)
     {
-        watch.resume();
+        watch.start();
         function();
         watch.stop();
         average += watch.getElapsedSeconds();
     }
 
     return average / samples;
-}
-
-double stopwatch::measureAverage(const std::function<void(void)> &function, const std::string &functionName, int samples)
-{
-    double average = stopwatch::measureAverage(function, samples);
-
-    auto msg = "average of " + std::to_string(samples) + " samples for " + functionName + " took: ";
-    std::cout << msg + std::to_string(average) << std::endl;
-
-    return average;
 }

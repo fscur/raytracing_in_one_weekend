@@ -2,7 +2,9 @@
 #include "screen.h"
 #include "io/ppmWriter.h"
 #include "io/bitmapWriter.h"
+#include "time/stopwatch.h"
 #include <future>
+#include <queue>
 
 screen::screen(std::wstring name, uint width, uint height) :
     window(name, width, height),
@@ -11,6 +13,7 @@ screen::screen(std::wstring name, uint width, uint height) :
     MAX_SSP(1024),
     MIN_WIDTH(200),
     MAX_WIDTH(800),
+    TILE_SIZE(32),
     _processing(false),
     _resultWidth(width),
     _resultHeight(uint(float(MAX_WIDTH) / ASPECT)),
@@ -62,25 +65,13 @@ void screen::initPathTracer()
     _pathTracer = new pathTracer(_scene);
 }
 
-void screen::onUpdate()
-{
-}
-
-void screen::onRender()
-{
-}
-
-void screen::onTick()
-{
-}
-
 void screen::onKeyUp(keyboardEventArgs* args)
 {
     if (!_processing)
-    { 
+    {
         switch (args->key)
         {
-        case PHIK_SPACE:
+        case PHIK_RETURN:
             launchPathTracer();
             break;
         case PHIK_UP:
@@ -118,36 +109,63 @@ void screen::onKeyUp(keyboardEventArgs* args)
 
 void screen::launchPathTracer()
 {
-    _processing = true;
-
-    auto task = new std::thread([&]
+    auto task = std::thread([&]
     {
+        auto test = "[" +
+            std::to_string(_resultWidth) + " x " +
+            std::to_string(_resultHeight) + " x " +
+            std::to_string(_currentSsp) + " spp]";
 
-        auto pixelWriter = new bitmapWriter(_resultWidth, _resultHeight);
-        pathTracerRunInfo info;
-        info.tile.x = _resultWidth/2;
-        info.tile.y = 0;
-        info.tile.w = _resultWidth/2;
-        info.tile.h = _resultHeight;
-        info.width = _resultWidth;
-        info.height = _resultHeight;
-        info.ssp = _currentSsp;
+        stopwatch::measure([&]
+        {
+            _processing = true;
 
-        _pathTracer->run(info, pixelWriter);
+            auto horizontalTilesCount = _resultWidth / TILE_SIZE;
+            auto verticalTilesCount = _resultHeight / TILE_SIZE;
 
-        auto bmp = new bitmap(_resultWidth, _resultHeight, pixelWriter->getData());
-        //bmp->blit(getDC());
-        bmp->stretchBlit(
-            getDC(), 
-            rectangle<int>(0, 0, _resultWidth, _resultHeight),
-            rectangle<int>(0, 0, _width, _height));
+            auto pixelWriter = new bitmapWriter(_resultWidth, _resultHeight);
 
-        delete(bmp);
-        //pixelWriter->save("raytracing.ppm");
+            std::queue<std::future<void>> futures;
 
-        delete pixelWriter;
-        _processing = false;
+            auto traceTiles = [&](int i, int j)
+            {
+                pathTracerRunInfo info;
+                info.tile.x = i * TILE_SIZE;
+                info.tile.y = j * TILE_SIZE;
+                info.tile.w = TILE_SIZE;
+                info.tile.h = TILE_SIZE;
+                info.width = _resultWidth;
+                info.height = _resultHeight;
+                info.ssp = _currentSsp;
+
+                _pathTracer->run(info, pixelWriter);
+            };
+
+            for (int i = 0; i < horizontalTilesCount; ++i)
+                for (int j = 0; j < verticalTilesCount; ++j)
+                    futures.push(std::async(std::launch::async, traceTiles, i, j));
+
+            while (futures.size() > 0)
+            {
+                futures.front().wait();
+                futures.pop();
+            }
+
+            auto bmp = new bitmap(_resultWidth, _resultHeight, pixelWriter->getData());
+
+            bmp->stretchBlit(
+                getDC(),
+                rectangle<int>(0, 0, _resultWidth, _resultHeight),
+                rectangle<int>(0, 0, _width, _height));
+
+            delete bmp;
+            delete pixelWriter;
+
+            _processing = false;
+        }, test);
     });
+
+    task.detach();
 }
 
 void screen::doubleSsp()
@@ -186,9 +204,9 @@ void screen::halveResolution()
 
 void screen::updateTitle()
 {
-    auto title = L"hit space to start[" + 
-        std::to_wstring(_resultWidth) + L" x " + 
-        std::to_wstring(_resultHeight) + L" x " + 
+    auto title = L"hit enter to start [" +
+        std::to_wstring(_resultWidth) + L" x " +
+        std::to_wstring(_resultHeight) + L" x " +
         std::to_wstring(_currentSsp) + L" spp]";
 
     setTitle(title);
@@ -204,11 +222,7 @@ void screen::writeInstructionsInConsole()
     console::writeLine("Down:   halve ssp.");
     console::writeLine("Left:   double resolution.");
     console::writeLine("Right:  halve resolution.");
-    console::writeLine("Space:  path trace.");
+    console::writeLine("Enter:  path trace.");
     console::writeLine("ESC:    cancel.");
+    console::writeLine("");
 }
-
-void screen::onClosing()
-{
-}
-

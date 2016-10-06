@@ -1,5 +1,6 @@
 #include "../drawing/bitmap.h"
 #include "bitmapWriter.h"
+#include "console.h"
 
 bitmapWriter::bitmapWriter(uint width, uint height) :
     _width(width),

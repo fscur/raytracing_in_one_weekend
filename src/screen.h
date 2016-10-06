@@ -16,10 +16,10 @@ public:
     ~screen(void);
 
     void onInit() override;
-    void onClosing() override;
-    void onUpdate() override;
-    void onRender() override;
-    void onTick() override;
+    void onClosing() override {};
+    void onUpdate() override {};
+    void onRender() override {};
+    void onTick() override {};
 
     void onKeyUp(keyboardEventArgs* args);
 
@@ -42,6 +42,7 @@ private:
     const uint MAX_SSP;
     const uint MIN_WIDTH;
     const uint MAX_WIDTH;
+    const uint TILE_SIZE;
 
     bool _processing;
     eventToken _onKeyUpToken;

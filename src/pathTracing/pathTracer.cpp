@@ -52,7 +52,6 @@ void pathTracer::run(const pathTracerRunInfo& info, pixelWriter* pixelWriter)
     float issp = 1.0f / float(info.ssp);
     float iwidth = 1.0f / float(info.width);
     float iheight = 1.0f / float(info.height);
-
     
     int tileXEnd = info.tile.w + info.tile.x;
     int tileYEnd = info.tile.h + info.tile.y;
