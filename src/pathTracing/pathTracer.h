@@ -1,17 +1,17 @@
 #pragma once
 #include "../common/types.h"
 #include "../math/ray.h"
+#include "../math/rectangle.h"
 #include "../scene/scene.h"
 #include "../scene/camera.h"
 #include "../io/pixelWriter.h"
 
 struct pathTracerRunInfo
 {
-    uint x;
-    uint y;
-    uint width;
-    uint height;
-    uint ssp;
+    rectangle<int> tile;
+    int width;
+    int height;
+    int ssp;
 };
 
 class pathTracer

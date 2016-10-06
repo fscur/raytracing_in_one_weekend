@@ -53,14 +53,18 @@ void pathTracer::run(const pathTracerRunInfo& info, pixelWriter* pixelWriter)
     float iwidth = 1.0f / float(info.width);
     float iheight = 1.0f / float(info.height);
 
-    for (int j = info.y; j < info.height; ++j)
+    
+    int tileXEnd = info.tile.w + info.tile.x;
+    int tileYEnd = info.tile.h + info.tile.y;
+
+    for (int j = info.tile.y; j < tileYEnd; ++j)
     {
         float y = float(j);
         
         if (!_running)
             break;
 
-        for (int i = info.x; i < info.width; ++i)
+        for (int i = info.tile.x; i < tileXEnd; ++i)
         {
             float x = float(i);
             vec3 color;

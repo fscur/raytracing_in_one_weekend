@@ -52,6 +52,4 @@ private:
     camera* _camera;
     scene* _scene;
     pathTracer* _pathTracer;
-
-    std::thread* _pathTracerTask;
 };

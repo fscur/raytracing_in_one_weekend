@@ -2,6 +2,7 @@
 #include "screen.h"
 #include "io/ppmWriter.h"
 #include "io/bitmapWriter.h"
+#include <future>
 
 screen::screen(std::wstring name, uint width, uint height) :
     window(name, width, height),
@@ -19,7 +20,6 @@ screen::screen(std::wstring name, uint width, uint height) :
 
 screen::~screen()
 {
-    delete _pathTracerTask;
     delete _scene;
     delete _camera;
     delete _pathTracer;
@@ -119,18 +119,20 @@ void screen::onKeyUp(keyboardEventArgs* args)
 void screen::launchPathTracer()
 {
     _processing = true;
-    _pathTracerTask = new std::thread([&]
-    {
-        bitmapWriter* pixelWriter = new bitmapWriter(_resultWidth, _resultHeight);
 
+    auto task = new std::thread([&]
+    {
+
+        auto pixelWriter = new bitmapWriter(_resultWidth, _resultHeight);
         pathTracerRunInfo info;
-        info.x = 0;
-        info.y = 0;
+        info.tile.x = _resultWidth/2;
+        info.tile.y = 0;
+        info.tile.w = _resultWidth/2;
+        info.tile.h = _resultHeight;
         info.width = _resultWidth;
         info.height = _resultHeight;
         info.ssp = _currentSsp;
 
-        //_pathTracer->run(info, pixelWriter);
         _pathTracer->run(info, pixelWriter);
 
         auto bmp = new bitmap(_resultWidth, _resultHeight, pixelWriter->getData());
@@ -146,8 +148,6 @@ void screen::launchPathTracer()
         delete pixelWriter;
         _processing = false;
     });
-
-    _pathTracerTask->detach();
 }
 
 void screen::doubleSsp()
